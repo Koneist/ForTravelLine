@@ -8,55 +8,57 @@ namespace hotelproblem
     {
         private string metrickey;
         private string providerkey;
-        public string providerid { get; }
-        private string calculationdatetime;
-        private DateTime exactbookingmaxdate;
-        private string exactbookingmaxdateadmin;
-        //private bool allroomtypeshasimprovements;
-        private string masquotaavailability;
-        private string hasroomdependedoffers;
-        private string hassmartrateoffers;
-        //private bool hasofferswithoptions;
-        private string allOffershasdescription;
-        private string hasratemix;
-        private string hasactivetransfers;
-        private string translationpercentage;
-        private string activepaymentsystemcount;
-        private string haspaymentatarrival;
-        private string hasbankcardguarantee;
-        private string hasbankcard;
-        private string guestUnfinishedemailsenabled;
-        private string feedbackletterenabled;
-        private string Surveyenabled;
-        private string bookingformStatus;
-        private string bookingformoperationmode;
-        private string bookingformstatuslevel;
-        private string minroomtypesphotoscount;
-        private string maxbookingavailabilitydate;
-        private string entrydatekey;
-        private string specialofferavailability;
-        private string hasofferswithaccesscodes;
-        private string hasoptionswithoutoffers;
-        private string providerunfinishedemailsenabled;
-        private string yandexavailabilityapienabled;
-        private string tripadvisorenabled;
-        private string providerrateplan;
-        private string bookingcount;
-        private string haswarningcancellationruleperiod;
-        private string welcomeletterisenabled;
+        public string providerid;   
+        private DateTime calculationDateTime;
+        private DateTime exactBookingMaxDate;
+        private DateTime exactBookingMaxDateAdmin;
+        private string allRoomTypesHasImprovements;
+        private string hasQuotaAvailability;
+        private string hasRoomDependedOffers;
+        private string hasSmartRateOfferss;
+        private string hasOffersWithOptions;
+        private string allOffersHasDescription;
+        private string hasRateMix;
+        private string hasActiveTransfers;
+        private string translationPercentage;
+        private string activePaymentSystemCount;
+        private string hasPaymentAtArrival;
+        private string hasBankCardGuarantee;
+        private string hasBankCard;
+        private string guestUnfinishedEmailsEnabled;
+        private string feedbackLetterEnabled;
+        private string surveyEnabled;
+        private string bookingFormStatus;
+        private string bookingFormOperationMode;
+        private string bookingFormStatusLevel;
+        private string minRoomTypesPhotosCount;
+        private DateTime maxBookingAvailabilityDate;
+        private string entryDateKey;
+        private string specialOfferAvailability;
+        private string hasOffersWithAccessCodes;
+        private string hasOptionsWithoutOffers;
+        private string providerUnfinishedEmailsEnabled;
+        private string yandexAvailabilityApiEnabled;
+        private string tripAdvisorEnabled;
+        private string providerRatePlan;
+        private string bookingCount;
+        private string hasWarningCancellationRulePeriod;
+        private string welcomeLetterIsEnabled;
 
-        private byte pricesnotdetermined;
-        private byte noquotas;
-        private byte nopaymentsystem;
-        private byte noform;
-        private byte notenoughroominformation;
-        private byte notenoughroomphoto;
-        private byte fewtranslationsintoforeignlanguages;
-        private byte notenoughpricinginformation;
-        private byte nopaymentuponcheckin;
-        private byte nofoodservice;
-        private byte notariffratemix;
-        private byte welcomefeedbacknotconfigured;
+        private byte pricesNotDetermined;
+        private byte noQuotas;
+        private byte noPaymentSystem;
+        private byte noForm;
+        private byte notEnoughRoomInformation;
+        private byte notEnoughRoomPhoto;
+        private byte fewTranslationsIntoForeignLanguages;
+        private byte notEnoughPricingInformation;
+        private byte noPaymentUponCheckIn;
+        private byte noFoodService;
+        private byte noTariffRatemix;
+        private byte welcomeFeedbackNotConfigured;
+        private string template;
+        public string outputLine { get; }
 
         public Data( string _line )
         {
@@ -64,66 +66,75 @@ namespace hotelproblem
             metrickey = splitstr[ 0 ];
             providerkey = splitstr[ 1 ];
             providerid = splitstr[ 2 ];
-            calculationdatetime = splitstr[ 3 ];
-            exactbookingmaxdate = DateTime.Parse( splitstr[ 4 ] );
-            exactbookingmaxdateadmin = splitstr[ 5 ];
-            //allroomtypeshasimprovements = bool.Parse( splitstr[ 6 ] );
-            masquotaavailability = splitstr[ 7 ];
-            hasroomdependedoffers = splitstr[ 8 ];
-            hassmartrateoffers = splitstr[ 9 ];
-            //hasofferswithoptions = bool.Parse( splitstr[ 10 ] );
-            allOffershasdescription = splitstr[ 11 ];
-            hasratemix = splitstr[ 12 ];
-            hasactivetransfers = splitstr[ 13 ];
-            translationpercentage = splitstr[ 14 ];
-            activepaymentsystemcount = splitstr[ 15 ];
-            haspaymentatarrival = splitstr[ 16 ];
-            hasbankcardguarantee = splitstr[ 17 ];
-            hasbankcard = splitstr[ 18 ];
-            guestUnfinishedemailsenabled = splitstr[ 19 ];
-            feedbackletterenabled = splitstr[ 20 ];
-            Surveyenabled = splitstr[ 21 ];
-            bookingformStatus = splitstr[ 22 ];
-            bookingformoperationmode = splitstr[ 23 ];
-            bookingformstatuslevel = splitstr[ 24 ];
-            minroomtypesphotoscount = splitstr[ 25 ];
-            maxbookingavailabilitydate = splitstr[ 26 ];
-            entrydatekey = splitstr[ 27 ];
-            specialofferavailability = splitstr[ 28 ];
-            hasofferswithaccesscodes = splitstr[ 29 ];
-            hasoptionswithoutoffers = splitstr[ 30 ];
-            providerunfinishedemailsenabled = splitstr[ 31 ];
-            yandexavailabilityapienabled = splitstr[ 32 ];
-            tripadvisorenabled = splitstr[ 33 ];
-            providerrateplan = splitstr[ 34 ];
-            bookingcount = splitstr[ 34 ];
-            haswarningcancellationruleperiod = splitstr[ 35 ];
-            welcomeletterisenabled = splitstr[ 36 ];
+            calculationDateTime = DateTime.Parse(splitstr[ 3 ]);
+            exactBookingMaxDate = DateTime.Parse( splitstr[ 4 ] );
+            exactBookingMaxDateAdmin = DateTime.Parse(splitstr[ 5 ]);
+            allRoomTypesHasImprovements =  splitstr[ 6 ];
+            hasQuotaAvailability = splitstr[ 7 ];
+            hasRoomDependedOffers = splitstr[ 8 ];
+            hasSmartRateOfferss = splitstr[ 9 ];
+            hasOffersWithOptions =  splitstr[ 10 ];
+            allOffersHasDescription = splitstr[ 11 ];
+            hasRateMix = splitstr[ 12 ];
+            hasActiveTransfers = splitstr[ 13 ];
+            translationPercentage = splitstr[ 14 ];
+            activePaymentSystemCount = splitstr[ 15 ];
+            hasPaymentAtArrival = splitstr[ 16 ];
+            hasBankCardGuarantee = splitstr[ 17 ];
+            hasBankCard = splitstr[ 18 ];
+            guestUnfinishedEmailsEnabled = splitstr[ 19 ];
+            feedbackLetterEnabled = splitstr[ 20 ];
+            surveyEnabled = splitstr[ 21 ];
+            bookingFormStatus = splitstr[ 22 ];
+            bookingFormOperationMode = splitstr[ 23 ];
+            bookingFormStatusLevel = splitstr[ 24 ];
+            minRoomTypesPhotosCount = splitstr[ 25 ];
+            maxBookingAvailabilityDate = DateTime.Parse(splitstr[ 26 ]);
+            entryDateKey = splitstr[ 27 ];
+            specialOfferAvailability = splitstr[ 28 ];
+            hasOffersWithAccessCodes = splitstr[ 29 ];
+            hasOptionsWithoutOffers = splitstr[ 30 ];
+            providerUnfinishedEmailsEnabled = splitstr[ 31 ];
+            yandexAvailabilityApiEnabled = splitstr[ 32 ];
+            tripAdvisorEnabled = splitstr[ 33 ];
+            providerRatePlan = splitstr[ 34 ];
+            bookingCount = splitstr[ 34 ];
+            hasWarningCancellationRulePeriod = splitstr[ 35 ];
+            welcomeLetterIsEnabled = splitstr[ 36 ];
         }
-        public void problems( )
+        public string problems()
         {
-            pricesnotdetermined = 1;
-            if ( activepaymentsystemcount == "0" )
-                nopaymentsystem = 1;
-            noquotas = 0;
-            /*if ( !allroomtypeshasimprovements )
-                notenoughroominformation = 1;*/
-            if ( minroomtypesphotoscount == "NULL" )
-                minroomtypesphotoscount = "0";
-            if ( Convert.ToInt32( minroomtypesphotoscount ) < 3 )
-                notenoughroomphoto = 1;
-            if ( Convert.ToDouble( translationpercentage ) < 50 )
-                fewtranslationsintoforeignlanguages = 1;
-            if ( allOffershasdescription == "0" )
-                notenoughpricinginformation = 1;
-            if ( haspaymentatarrival == "0" )
-                nopaymentuponcheckin = 1;
-            /*if ( !hasofferswithoptions )
-                nofoodservice = 1;*/
-            notariffratemix = 0;
-            if ( feedbackletterenabled == "0" )
-                welcomefeedbacknotconfigured = 1;
-            Console.Write( metrickey + "\t" + pricesnotdetermined + "\t" + noquotas + "\t" + nopaymentsystem + "\t" + noform + "\t" + notenoughroominformation + "\t" + notenoughroomphoto + "\t" + fewtranslationsintoforeignlanguages + "\t" + notenoughpricinginformation + "\t" + nopaymentuponcheckin + "\t" + nofoodservice + "\t" + notariffratemix + "\t" + welcomefeedbacknotconfigured );
+            if (specialOfferAvailability == "NULL")
+                specialOfferAvailability = "0";
+            if ((maxBookingAvailabilityDate < DateTime.Now.AddMonths(6)) || (Convert.ToInt32(specialOfferAvailability) < 6))
+                pricesNotDetermined = 1;
+            if ( activePaymentSystemCount == "0" )
+                noPaymentSystem = 1;
+            noQuotas = 0;
+            if ( allRoomTypesHasImprovements == "0" )
+                notEnoughRoomInformation = 1;
+            if ( minRoomTypesPhotosCount == "NULL" )
+                minRoomTypesPhotosCount = "0";
+            if ( Convert.ToInt32( minRoomTypesPhotosCount ) < 3 )
+                notEnoughRoomPhoto = 1;
+            if ( Convert.ToDouble( translationPercentage ) < 50 )
+                fewTranslationsIntoForeignLanguages = 1;
+            if ( allOffersHasDescription == "0" )
+                notEnoughPricingInformation = 1;
+            if ( hasPaymentAtArrival == "0" )
+                noPaymentUponCheckIn = 1;
+            if ( hasOffersWithOptions == "0" )
+                noFoodService = 1;
+            noTariffRatemix = 0;
+            if ( feedbackLetterEnabled == "0" )
+                welcomeFeedbackNotConfigured = 1;
+            string template = @"{0}   {1}   {2}   {3}   {4}   {5}   {6}   {7}   {8}   {9}   {10}   {11}   {12}   {13}";
+            string outputLine = String.Format(template, metrickey, DateTime.Now.ToString("dd.MM.yyyy"), pricesNotDetermined, noQuotas, noPaymentSystem, noForm, notEnoughRoomInformation, notEnoughRoomPhoto, fewTranslationsIntoForeignLanguages, notEnoughPricingInformation, noPaymentUponCheckIn, noFoodService, noTariffRatemix, welcomeFeedbackNotConfigured);
+            return outputLine;
+        }
+        public void Print() 
+        {
+            Console.WriteLine(outputLine);
         }
 
     }
@@ -132,17 +143,20 @@ namespace hotelproblem
     {
         static void Main( string[] args )
         {
-            String[] lines = File.ReadAllLines( "input.txt" );
+            var inputFile = "input.txt";
             var outputFile = "output.txt";
-            string template = @"{0}    {1}";
+            String[] lines = File.ReadAllLines(inputFile);
+            //string template = @"{0}    {1}";
             List<string> outputLines = new List<string>();
             for ( int i = 0; i < lines.Length; i++ )
             {
                 Data line = new Data( lines[ i ] );
                 line.problems();
-                string outputLine = String.Format( template, line.providerid, DateTime.Now.ToString( "dd.MM.yyyy" ) );
-                outputLines.Add( outputLine );
+                //string outputLine = String.Format( template, line.providerid, DateTime.Now.ToString( "dd.MM.yyyy" ) );
+                outputLines.Add(line.outputLine);
+                line.Print();
             }
+            
             File.WriteAllLines(outputFile, outputLines);
         }
     }
