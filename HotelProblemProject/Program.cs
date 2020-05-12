@@ -11,12 +11,12 @@ namespace HotelProblemProject
         static void Main(string[] args)
         {
             List<Сharacteristic> characteristics = ReadPosts();
+            List<Problem> problems = new List<Problem>();
             foreach (Сharacteristic characteristic in characteristics)
             {
-                InsertProblem(characteristic.providerid, characteristic.allRoomTypesHasImprovements,
-                              characteristic.hasOffersWithOptions, characteristic.allOffersHasDescription, characteristic.translationPercentage,
-                              characteristic.activePaymentSystemCount, characteristic.hasPaymentAtArrival, characteristic.feedbackLetterEnabled,
-                              characteristic.minRoomTypesPhotosCount, characteristic.maxBookingAvailabilityDate, characteristic.specialOfferAvailability);
+                Problem problem = CheckProblem(characteristic);
+                problems.Add(problem);
+                InsertProblem(characteristic.providerid, problem);
             }
         }
 
@@ -33,6 +33,7 @@ namespace HotelProblemProject
                         @"SELECT
                             [metrickey],
                             [providerid],
+                            [calculationDateTime],
                             [allRoomTypesHasImprovements],
                             [hasOffersWithOptions],
                             [allOffersHasDescription],
@@ -53,6 +54,7 @@ namespace HotelProblemProject
                             {
                                 metrickey = Convert.ToInt32(reader["metrickey"]),
                                 providerid = Convert.ToInt32(reader["providerid"]),
+                                calculationDateTime = Convert.ToDateTime(reader["calculationDateTime"]),
                                 allRoomTypesHasImprovements = Convert.ToInt32(reader["allRoomTypesHasImprovements"]),
                                 hasOffersWithOptions = reader["hasOffersWithOptions"] is DBNull ?  (int?)null : Convert.ToInt32(reader["hasOffersWithOptions"]),
                                 allOffersHasDescription = reader["allOffersHasDescription"] is DBNull ? (int?)null : Convert.ToInt32(reader["allOffersHasDescription"]),
@@ -72,42 +74,57 @@ namespace HotelProblemProject
             return characteristics;
         }
 
-        private static void InsertProblem(int providerid, int allRoomTypesHasImprovements, 
-                                      int? hasOffersWithOptions, int? allOffersHasDescription, double translationPercentage, 
-                                      int activePaymentSystemCount,int hasPaymentAtArrival,int feedbackLetterEnabled,
-                                      int? minRoomTypesPhotosCount, DateTime maxBookingAvailabilityDate, int? specialOfferAvailability)
+        private static Problem CheckProblem(Сharacteristic characteristic)
+        {
+            var _problem = new Problem();
+            if ((characteristic.maxBookingAvailabilityDate < DateTime.Now.AddMonths(6)) || (characteristic.specialOfferAvailability < 6))
+                _problem.pricesNotDetermined = 1;
+            if (characteristic.activePaymentSystemCount == 0)
+                _problem.noPaymentSystem = 1;
+            _problem.noQuotas = 0;
+            if (characteristic.allRoomTypesHasImprovements == 0)
+                _problem.notEnoughRoomInformation = 1;
+            if (characteristic.minRoomTypesPhotosCount < 3)
+                _problem.notEnoughRoomPhoto = 1;
+            if (characteristic.translationPercentage < 50)
+                _problem.fewTranslationsIntoForeignLanguages = 1;
+            if (characteristic.allOffersHasDescription == 0)
+                _problem.notEnoughPricingInformation = 1;
+            if (characteristic.hasPaymentAtArrival == 0)
+                _problem.noPaymentUponCheckIn = 1;
+            if (characteristic.hasOffersWithOptions == 0)
+                _problem.noFoodService = 1;
+            _problem.noTariffRatemix = 0;
+            if (characteristic.feedbackLetterEnabled == 0)
+                _problem.welcomeFeedbackNotConfigured = 1;
+            if ((_problem.pricesNotDetermined == 1) || (_problem.noPaymentSystem == 1) || (_problem.noQuotas == 1) ||
+                        (_problem.notEnoughRoomInformation == 1) || (_problem.notEnoughRoomPhoto == 1) || (_problem.fewTranslationsIntoForeignLanguages == 1) ||
+                        (_problem.notEnoughPricingInformation == 1) || (_problem.noPaymentUponCheckIn == 1) || (_problem.noFoodService == 1) || (_problem.noTariffRatemix == 1) ||
+                        (_problem.welcomeFeedbackNotConfigured == 1))
+            {
+                _problem.isWrite = true;
+            } else
+            {
+                _problem.isWrite = false;
+            }
+            _problem.calculationDateTime = characteristic.calculationDateTime;
+                return _problem;
+        }
+
+        public static List<ProblemByYear> SortProblem(Problem problem)
+        {
+            List<ProblemByYear> problemByYears = new List<ProblemByYear>();
+            return problemByYears;
+        }
+        
+        private static void InsertProblem(int providerid, Problem _problem)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (SqlCommand cmd = connection.CreateCommand())
                 {
-                    Problem problem = new Problem();
-                    if ((maxBookingAvailabilityDate < DateTime.Now.AddMonths(6)) || (specialOfferAvailability < 6))
-                        problem.pricesNotDetermined = 1;
-                    if (activePaymentSystemCount == 0)
-                        problem.noPaymentSystem = 1;
-                    problem.noQuotas = 0;
-                    if (allRoomTypesHasImprovements == 0)
-                        problem.notEnoughRoomInformation = 1;
-                    if (minRoomTypesPhotosCount < 3)
-                        problem.notEnoughRoomPhoto = 1;
-                    if (translationPercentage < 50)
-                        problem.fewTranslationsIntoForeignLanguages = 1;
-                    if (allOffersHasDescription == 0)
-                        problem.notEnoughPricingInformation = 1;
-                    if (hasPaymentAtArrival == 0)
-                        problem.noPaymentUponCheckIn = 1;
-                    if (hasOffersWithOptions == 0)
-                        problem.noFoodService = 1;
-                    problem.noTariffRatemix = 0;
-                    if (feedbackLetterEnabled == 0)
-                        problem.welcomeFeedbackNotConfigured = 1;
-
-                    if ((problem.pricesNotDetermined == 1) || (problem.noPaymentSystem == 1) || (problem.noQuotas == 1) ||
-                        (problem.notEnoughRoomInformation == 1) || (problem.notEnoughRoomPhoto == 1) || (problem.fewTranslationsIntoForeignLanguages == 1) ||
-                        (problem.notEnoughPricingInformation == 1) || (problem.noPaymentUponCheckIn == 1) || (problem.noFoodService == 1) || (problem.noTariffRatemix == 1) ||
-                        (problem.welcomeFeedbackNotConfigured == 1))
+                    if (_problem.isWrite)
                     {
                         cmd.CommandText = @"
                         INSERT INTO [Problem]
@@ -144,18 +161,18 @@ namespace HotelProblemProject
 
                         cmd.Parameters.Add("@providerId", SqlDbType.Int).Value = providerid;
                         cmd.Parameters.Add("@date", SqlDbType.Date).Value = DateTime.Now;
-                        cmd.Parameters.Add("@pricesNotDetermined", SqlDbType.Int).Value = problem.pricesNotDetermined;
-                        cmd.Parameters.Add("@noQuotas", SqlDbType.Int).Value = problem.noQuotas;
-                        cmd.Parameters.Add("@noPaymentSystem", SqlDbType.Int).Value = problem.noPaymentSystem;
-                        cmd.Parameters.Add("@noForm", SqlDbType.Int).Value = problem.noForm;
-                        cmd.Parameters.Add("@notEnoughRoomInformation", SqlDbType.Int).Value = problem.notEnoughRoomInformation;
-                        cmd.Parameters.Add("@fewTranslationsIntoForeignLanguages", SqlDbType.Int).Value = problem.fewTranslationsIntoForeignLanguages;
-                        cmd.Parameters.Add("@notEnoughPricingInformation", SqlDbType.Int).Value = problem.notEnoughPricingInformation;
-                        cmd.Parameters.Add("@notEnoughRoomPhoto", SqlDbType.Int).Value = problem.notEnoughRoomPhoto;
-                        cmd.Parameters.Add("@noPaymentUponCheckIn", SqlDbType.Int).Value = problem.noPaymentUponCheckIn;
-                        cmd.Parameters.Add("@noFoodService", SqlDbType.Int).Value = problem.noFoodService;
-                        cmd.Parameters.Add("@noTariffRatemix", SqlDbType.Int).Value = problem.noTariffRatemix;
-                        cmd.Parameters.Add("@welcomeFeedbackNotConfigured", SqlDbType.Int).Value = problem.welcomeFeedbackNotConfigured;
+                        cmd.Parameters.Add("@pricesNotDetermined", SqlDbType.Int).Value = _problem.pricesNotDetermined;
+                        cmd.Parameters.Add("@noQuotas", SqlDbType.Int).Value = _problem.noQuotas;
+                        cmd.Parameters.Add("@noPaymentSystem", SqlDbType.Int).Value = _problem.noPaymentSystem;
+                        cmd.Parameters.Add("@noForm", SqlDbType.Int).Value = _problem.noForm;
+                        cmd.Parameters.Add("@notEnoughRoomInformation", SqlDbType.Int).Value = _problem.notEnoughRoomInformation;
+                        cmd.Parameters.Add("@fewTranslationsIntoForeignLanguages", SqlDbType.Int).Value = _problem.fewTranslationsIntoForeignLanguages;
+                        cmd.Parameters.Add("@notEnoughPricingInformation", SqlDbType.Int).Value = _problem.notEnoughPricingInformation;
+                        cmd.Parameters.Add("@notEnoughRoomPhoto", SqlDbType.Int).Value = _problem.notEnoughRoomPhoto;
+                        cmd.Parameters.Add("@noPaymentUponCheckIn", SqlDbType.Int).Value = _problem.noPaymentUponCheckIn;
+                        cmd.Parameters.Add("@noFoodService", SqlDbType.Int).Value = _problem.noFoodService;
+                        cmd.Parameters.Add("@noTariffRatemix", SqlDbType.Int).Value = _problem.noTariffRatemix;
+                        cmd.Parameters.Add("@welcomeFeedbackNotConfigured", SqlDbType.Int).Value = _problem.welcomeFeedbackNotConfigured;
                     }
                 }
             }

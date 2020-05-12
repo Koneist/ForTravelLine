@@ -6,6 +6,7 @@ namespace HotelProblemProject
 {
     class Problem
     {
+        public DateTime calculationDateTime;
         public int pricesNotDetermined;
         public int noQuotas;
         public int noPaymentSystem;
@@ -18,5 +19,6 @@ namespace HotelProblemProject
         public int noFoodService;
         public int noTariffRatemix;
         public int welcomeFeedbackNotConfigured;
+        public bool isWrite;
     }
 }
