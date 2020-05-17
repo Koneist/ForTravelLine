@@ -6,6 +6,12 @@ namespace HotelProblemProject
 {
     class ProblemByMonth
     {
-        Problem _problem = new Problem();
+        public ProblemByMonth(Problem problem)
+        {
+            this.problem = problem;
+            month = problem.calculationDateTime.Month;
+        }
+        public int month;
+        public Problem problem;
     }
 }

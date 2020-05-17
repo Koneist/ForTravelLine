@@ -6,6 +6,12 @@ namespace HotelProblemProject
 {
     class ProblemByYear
     {
-        List<ProblemByMonth> months = new List<ProblemByMonth>(); 
+        public ProblemByYear(int year)
+        {
+            this.year = year;
+            problemsByMonth = new List<ProblemByMonth>();
+        }
+        public int year;
+        public List<ProblemByMonth> problemsByMonth;
     }
 }

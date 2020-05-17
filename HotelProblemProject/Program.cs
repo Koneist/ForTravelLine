@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace HotelProblemProject
 {
@@ -12,11 +13,18 @@ namespace HotelProblemProject
         {
             List<Сharacteristic> characteristics = ReadPosts();
             List<Problem> problems = new List<Problem>();
+            List<ProblemByYear> problemsByYear = new List<ProblemByYear>();
             foreach (Сharacteristic characteristic in characteristics)
             {
                 Problem problem = CheckProblem(characteristic);
-                problems.Add(problem);
+                //problems.Add(problem);
+                problemsByYear = SortProblem(problemsByYear, problem);
                 InsertProblem(characteristic.providerid, problem);
+            }
+            foreach(ProblemByYear problemByYear in problemsByYear)
+            {
+                foreach(ProblemByMonth problemByMonth in problemByYear.problemsByMonth)
+                    Console.WriteLine("{0}, {1}", problemByYear.year, problemByMonth.month);
             }
         }
 
@@ -111,10 +119,21 @@ namespace HotelProblemProject
                 return _problem;
         }
 
-        public static List<ProblemByYear> SortProblem(Problem problem)
+        public static List<ProblemByYear> SortProblem(List<ProblemByYear> problemsByYears, Problem problem)
         {
-            List<ProblemByYear> problemByYears = new List<ProblemByYear>();
-            return problemByYears;
+            //ProblemByMonth problemByMonth = new ProblemByMonth(problem);
+            ProblemByYear problemByYears = new ProblemByYear(problem.calculationDateTime.Year);
+            problemByYears.problemsByMonth.Add(new ProblemByMonth(problem));
+            if ((problemsByYears.Count == 0) || problemsByYears.Any(year => problemByYears.year != problem.calculationDateTime.Year)) 
+            {
+                problemsByYears.Add(problemByYears);
+            } 
+            else if (problemsByYears.Any(year => problemByYears.year == problem.calculationDateTime.Year))
+            {
+                problemsByYears.Where(year => problemByYears.year == problem.calculationDateTime.Year).FirstOrDefault().problemsByMonth.Add(new ProblemByMonth(problem));
+            }
+
+            return problemsByYears;
         }
         
         private static void InsertProblem(int providerid, Problem _problem)
